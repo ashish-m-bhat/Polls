@@ -19,3 +19,14 @@ export const createPoll = async (poll:Poll, router: AppRouterInstance) => {
     }
 
 };
+
+export const fetchAllPolls = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/polls`, { next: {
+            revalidate: 1
+        } } );
+        return response.json();
+    } catch (error) {
+        console.log('failed to fetch polls:', error);
+    }
+};

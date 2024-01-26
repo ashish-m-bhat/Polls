@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 export interface Poll {
     pollId: string;
     isActive: boolean;
@@ -13,3 +14,18 @@ export interface Option {
     id: string;
     value: string;
 };
+
+export interface Button {
+    onClick?: (event: React.MouseEvent) => void;
+    children: ReactNode;
+    icon?: ReactNode;
+    endIcon?: ReactNode;
+    className?: string;
+    disabled?: boolean;
+    type?: "button" | "submit" | "reset" | undefined;
+};
+
+export interface Card {
+    children: ReactNode;
+    className?: string;
+ };

@@ -1,10 +1,16 @@
 import Link from "next/link";
 import styles from "./page.module.css";
+import { fetchAllPolls } from "@/utils/helper";
+import { ListPolls } from "@/components";
 
-export default function Home() {
+export default async function Home() {
+  const pollsList = await fetchAllPolls();
+
   return (
     <main className={styles.main}>
-      <Link href='/create-poll'> Create Poll </Link>
+      <div>
+        <ListPolls pollsList={pollsList} />
+      </div>
     </main>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 import { Option, Poll } from "@/utils/types";
 import React, { FormEvent, useState } from "react";
-import styles from '../../styles/createPoll.module.css';
+import styles from '../../styles/CreatePoll.module.css';
 import { useRouter } from "next/navigation";
 import { createPoll } from "@/utils/helper";
+import Button from "../UI/Button";
 
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 4;
@@ -89,13 +90,13 @@ function CreatePoll() {
                 )}
 
                 {/* Create poll CTA */}
-                <button
+                <Button
                     type="submit"
                     onClick={createPollHandler}
                     disabled={options.length < MIN_OPTIONS}
                 >
                     Create poll
-                </button>
+                </Button>
             </form>
         </div>
     );

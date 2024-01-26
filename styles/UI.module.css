@@ -1,0 +1,32 @@
+.button {
+    height: 3rem;
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: rgb(51, 49, 49);
+    color: white;
+}
+
+.button:hover:enabled {
+    background-color: black;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.card {
+    min-height: 100px;
+    min-width: 300px;
+    background-color: black;
+    color: white;
+    border-radius: 8px;
+    overflow:hidden;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--color_blue) 0px 22px 70px 1px;
+}
