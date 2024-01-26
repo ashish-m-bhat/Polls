@@ -1,5 +1,5 @@
 export interface Poll {
-    id: string;
+    pollId: string;
     isActive: boolean;
     question: string;
     options: Option[];

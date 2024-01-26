@@ -3,6 +3,7 @@ import { Option, Poll } from "@/utils/types";
 import React, { FormEvent, useState } from "react";
 import styles from '../../styles/createPoll.module.css';
 import { useRouter } from "next/navigation";
+import { createPoll } from "@/utils/helper";
 
 const MIN_OPTIONS = 2;
 const MAX_OPTIONS = 4;
@@ -31,9 +32,9 @@ function CreatePoll() {
         document.getElementById("options")!.appendChild(newOptionElement);
     };
 
-    const createPoll = async (event: FormEvent) => {
+    const createPollHandler = async (event: FormEvent) => {
         event.preventDefault();
-        const poll = {
+        const poll:Poll = {
             pollId,
             isActive: true,
             question: questionInput,
@@ -42,26 +43,13 @@ function CreatePoll() {
             creationDate: Date.now(),
             closeDate: Date.now() + 86400 * 1000 * DAYS_TO_CLOSE,
         };
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-poll`, {
-                method: 'POST',
-                body: JSON.stringify(poll),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const data = await response.json();
-            console.log('data', data);
-            alert('Poll created');
-            router.push('/');
-        } catch (error) {
-            console.log('error:', error);
-        }
+        createPoll(poll, router);
+
     };
 
     return (
         <div className={styles['createPoll']}>
-            <form className={styles['form']} onSubmit={createPoll}>
+            <form className={styles['form']} onSubmit={createPollHandler}>
                 {/* Question */}
                 <label>
                     <input
@@ -103,7 +91,7 @@ function CreatePoll() {
                 {/* Create poll CTA */}
                 <button
                     type="submit"
-                    onClick={createPoll}
+                    onClick={createPollHandler}
                     disabled={options.length < MIN_OPTIONS}
                 >
                     Create poll
