@@ -1,7 +1,7 @@
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Poll } from "./types";
+import { Option, Poll } from "./types";
 
-export const createPoll = async (poll:Poll, router: AppRouterInstance) => {
+export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-poll`, {
             method: 'POST',
@@ -22,11 +22,44 @@ export const createPoll = async (poll:Poll, router: AppRouterInstance) => {
 
 export const fetchAllPolls = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/polls`, { next: {
-            revalidate: 1
-        } } );
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/polls`, {
+            next: {
+                revalidate: 1
+            }
+        });
         return response.json();
     } catch (error) {
         console.log('failed to fetch polls:', error);
     }
+};
+
+export const votePoll = async (poll: Poll, selectedOption: Option) => {
+    const modifiedPoll = {
+        ...poll,
+        voteCount: poll.voteCount + 1,
+        options: poll.options.map(option => {
+            if (option.id === selectedOption.id) {
+                return ({
+                    ...selectedOption,
+                    voteCount: selectedOption.voteCount + 1
+                })
+            } else {
+                return option
+            }
+        })
+    };
+
+
+    try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/vote`, {
+            method: 'POST',
+            body: JSON.stringify(modifiedPoll),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    } catch (error) {
+        console.log('voting failed:', error);
+    }
+
 };

@@ -20,7 +20,7 @@ function ListPolls({ pollsList }: { pollsList: Poll[] }) {
                     pollsList.map((poll, index) => {
                         if (!poll.isActive) return <></>;
                         return (
-                            <DisplayPoll poll={poll} index={index} key={poll.pollId} />
+                            <DisplayPoll poll={poll} index={index} key={poll.id} />
                         );
                     })
                 }

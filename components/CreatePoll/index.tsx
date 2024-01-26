@@ -1,6 +1,6 @@
 'use client';
 import { Option, Poll } from "@/utils/types";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import styles from '../../styles/CreatePoll.module.css';
 import { useRouter } from "next/navigation";
 import { createPoll } from "@/utils/helper";
@@ -11,7 +11,9 @@ const MAX_OPTIONS = 4;
 const DAYS_TO_CLOSE = 1;
 
 function CreatePoll() {
-    const pollId = Date.now().toString();
+    const pollIdRef = useRef(Date.now().toString());
+    const pollId = pollIdRef.current;
+
     const [options, setOptions] = useState<Option[]>([]);
     const [questionInput, setQuestionInput] = useState("");
     const [optionInput, setOptionInput] = useState("");
@@ -23,9 +25,10 @@ function CreatePoll() {
         const newOptionElement = document.createElement("p");
         newOptionElement.innerText = optionInput;
         const newOption: Option = {
-            pollId: pollId,
+            pollId,
             id: `${pollId}_option_${options.length + 1}`,
-            value: optionInput
+            value: optionInput,
+            voteCount: 0,
         };
 
         setOptions((val) => [...val, newOption]);
@@ -36,7 +39,7 @@ function CreatePoll() {
     const createPollHandler = async (event: FormEvent) => {
         event.preventDefault();
         const poll:Poll = {
-            pollId,
+            id: pollId,
             isActive: true,
             question: questionInput,
             voteCount: 0,

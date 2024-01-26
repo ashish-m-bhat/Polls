@@ -21,4 +21,10 @@
     min-width: 300px;
     text-align: left;
     padding: 8px;
+
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: rgb(116, 110, 110);
 }
