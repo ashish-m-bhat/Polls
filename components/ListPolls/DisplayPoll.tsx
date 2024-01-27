@@ -32,7 +32,7 @@ function DisplayPoll({ poll, index }: { poll: Poll, index: number }) {
 function DisplayOptions({ poll }: { poll: Poll }) {
     const [votingDone, setVotingDone] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState('');
-    const { isLoggedIn } = useAppSelector((state) => state.auth);
+    const { isLoggedIn, email, accessToken } = useAppSelector((state) => state.auth);
 
     const getVotePercentage = (option: Option) => {
         const newOptionVoteCount = option.id === selectedOptionId ? option.voteCount + 1 : option.voteCount;
@@ -48,7 +48,7 @@ function DisplayOptions({ poll }: { poll: Poll }) {
         if (votingDone) return;
         setSelectedOptionId(option.id);
         setVotingDone(true);
-        votePoll(poll, option);
+        votePoll(poll, option, email);
     };
 
     return (

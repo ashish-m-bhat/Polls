@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Option, Poll } from "./types";
-import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, VOTE_ENDPOINT } from "./constants";
+import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, REGISTER_USER_VOTE, VOTE_ENDPOINT } from "./constants";
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
@@ -31,7 +31,24 @@ export const fetchAllPolls = async () => {
     }
 };
 
-export const votePoll = async (poll: Poll, selectedOption: Option) => {
+export const registerUserVote = async (poll: Poll, selectedOption: Option, userEmail: string ) => {
+    try {
+        await fetch(REGISTER_USER_VOTE, {
+            method: 'POST',
+            body: JSON.stringify({ poll, selectedOption, userEmail }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    } catch (error) {
+        console.log('Failed to register user vote');
+    }
+
+}
+
+export const votePoll = async (poll: Poll, selectedOption: Option, userEmail: string) => {
+
+    // modify poll with added vote count for poll & option
     const modifiedPoll = {
         ...poll,
         voteCount: poll.voteCount + 1,
@@ -58,13 +75,14 @@ export const votePoll = async (poll: Poll, selectedOption: Option) => {
     } catch (error) {
         console.log('voting failed:', error);
     }
+    await registerUserVote(poll, selectedOption, userEmail);
 };
 
 export const fetchUserInfo = async (accessToken: string) => {
     return await axios.get(
         'https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: {
-          Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`
         }
-      });
+    });
 };
