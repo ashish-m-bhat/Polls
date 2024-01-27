@@ -1,7 +1,6 @@
-import Link from "next/link";
 import styles from "./page.module.css";
 import { fetchAllPolls } from "@/utils/helper";
-import { ListPolls } from "@/components";
+import { HomePage } from "@/components";
 
 export default async function Home() {
   const pollsList = await fetchAllPolls();
@@ -9,7 +8,7 @@ export default async function Home() {
   return (
     <main className={styles.main}>
       <div>
-        <ListPolls pollsList={pollsList} />
+        <HomePage pollsList={pollsList} />
       </div>
     </main>
   );

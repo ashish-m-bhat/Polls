@@ -3,6 +3,7 @@ import styles from '../../styles/ListPolls.module.css';
 import { Option, Poll } from '@/utils/types';
 import Card from '../UI/Card';
 import { votePoll } from '@/utils/helper';
+import { useAppSelector } from '@/store';
 
 const optionsMarkings = {
     1: 'A',
@@ -31,6 +32,7 @@ function DisplayPoll({ poll, index }: { poll: Poll, index: number }) {
 function DisplayOptions({ poll }: { poll: Poll }) {
     const [votingDone, setVotingDone] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState('');
+    const { isLoggedIn } = useAppSelector((state) => state.auth);
 
     const getVotePercentage = (option: Option) => {
         const newOptionVoteCount = option.id === selectedOptionId ? option.voteCount + 1 : option.voteCount;
@@ -39,6 +41,10 @@ function DisplayOptions({ poll }: { poll: Poll }) {
 
     // votePoll() will send a POST request which will modify the poll object to increase vote count of the poll & the selected option
     const onPollVote = (option: Option) => {
+        if (!isLoggedIn) {
+            alert('You have to login to create a poll')
+            return;
+        }
         if (votingDone) return;
         setSelectedOptionId(option.id);
         setVotingDone(true);

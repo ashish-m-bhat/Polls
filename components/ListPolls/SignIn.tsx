@@ -4,27 +4,41 @@ import Button from '../UI/Button';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { fetchUserInfo } from '@/utils/helper';
 import styles from '../../styles/ListPolls.module.css';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { logIn, logOut, setUserInfo } from '@/store/auth-slice';
+import { User } from '@/utils/types';
 
-interface Props {
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  setUserDetails: React.Dispatch<any>;
-};
 
-function SignIn({ isLoggedIn, setIsLoggedIn, setUserDetails }: Props) {
+function SignIn() {
+  const dispatch = useAppDispatch();
+  const { isLoggedIn } = useAppSelector((state) => state.auth);
+
+
   const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      setIsLoggedIn(true);
-      const userInfo = await fetchUserInfo(tokenResponse.access_token);
-      setUserDetails(userInfo);
+    onSuccess: async ({ access_token }) => {
+      dispatch(logIn());
+      try {
+        const { data } = await fetchUserInfo(access_token);
+        const userInfo: User = {
+          email: data.email,
+          name: data.name,
+          accessToken: access_token,
+          picture: data.picture,
+          isLoggedIn
+        };
+        dispatch(setUserInfo(userInfo))
+      } catch (error) {
+        dispatch(logOut());
+        alert('Something went wrong, please try again.')
+      }
+
     },
     onError: errorResponse => console.log(errorResponse),
   });
 
   const signBtnHandler = () => {
-    if (isLoggedIn)   {
-      setIsLoggedIn(false);
-      setUserDetails(null);
+    if (isLoggedIn) {
+      dispatch(logOut());
       googleLogout();
     } else {
       googleLogin();
@@ -32,7 +46,7 @@ function SignIn({ isLoggedIn, setIsLoggedIn, setUserDetails }: Props) {
   };
 
   return (
-    <div  className={styles.login__section}>
+    <div className={styles.login__section}>
       {!isLoggedIn && <Button onClick={signBtnHandler} className={styles.login__btn} >Login</Button>}
     </div>
   )

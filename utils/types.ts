@@ -16,6 +16,14 @@ export interface Option {
     voteCount: number;
 };
 
+export interface User {
+    isLoggedIn: boolean;
+    accessToken: string;
+    email: string;
+    name: string;
+    picture: string;
+};
+
 export interface Button {
     onClick?: (event: React.MouseEvent) => void;
     children: ReactNode;
