@@ -1,9 +1,11 @@
+import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Option, Poll } from "./types";
+import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, VOTE_ENDPOINT } from "./constants";
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/create-poll`, {
+        const response = await fetch(CREATE_POLL_ENDPOINT, {
             method: 'POST',
             body: JSON.stringify(poll),
             headers: {
@@ -22,7 +24,7 @@ export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
 
 export const fetchAllPolls = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/polls`, { cache: 'no-store' });
+        const response = await fetch(LIST_ALL_POLLS_ENDPOINT, { cache: 'no-store' });
         return response.json();
     } catch (error) {
         console.log('failed to fetch polls:', error);
@@ -45,9 +47,8 @@ export const votePoll = async (poll: Poll, selectedOption: Option) => {
         })
     };
 
-
     try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/vote`, {
+        await fetch(VOTE_ENDPOINT, {
             method: 'POST',
             body: JSON.stringify(modifiedPoll),
             headers: {
@@ -57,5 +58,13 @@ export const votePoll = async (poll: Poll, selectedOption: Option) => {
     } catch (error) {
         console.log('voting failed:', error);
     }
+};
 
+export const fetchUserInfo = async (accessToken: string) => {
+    return await axios.get(
+        'https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
 };
