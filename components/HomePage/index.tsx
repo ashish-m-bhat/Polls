@@ -7,20 +7,10 @@ import { ListPolls } from '..';
 import Button from '../UI/Button';
 import styles from '../../styles/ListPolls.module.css';
 import SignIn from '../ListPolls/SignIn';
-import { Provider } from 'react-redux';
-import { store, useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
+import { storeWrapper } from '../StoreWrapper';
 
-function HomePageWrapper({ pollsList }: { pollsList: Poll[] }) {
-    return (
-        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}>
-            <Provider store={store}>
-                <Home pollsList={pollsList} />
-            </Provider>
-        </GoogleOAuthProvider>
-
-    )
-}
-function Home({ pollsList }: { pollsList: Poll[] }) {
+function HomePage({ pollsList }: { pollsList: Poll[] }) {
     const { isLoggedIn } = useAppSelector((state) => state.auth);
     const router = useRouter();
 
@@ -37,6 +27,7 @@ function Home({ pollsList }: { pollsList: Poll[] }) {
             </Button>
             <ListPolls pollsList={pollsList} />
         </div>
-    )
+    );
 }
-export default HomePageWrapper;
+
+export default storeWrapper(HomePage);
