@@ -19,12 +19,30 @@
     background-color: rgb(65, 63, 63);
     border-radius: 8px;
     min-width: 300px;
-    text-align: left;
-    padding: 8px;
-
     cursor: pointer;
 }
 
 .option:hover {
+    background-color: rgb(116, 110, 110);
+}
+
+.inner-option {
+    text-align: left;
+    padding: 8px;
+    height: 100%;
+    width: 100%;
+}
+
+.inner-option.voted {
+    border-radius: 8px;
+}
+
+.percentage {
+    float: right;
+    position: relative;
+    right: 1rem;
+}
+
+.option-selected {
     background-color: rgb(116, 110, 110);
 }
