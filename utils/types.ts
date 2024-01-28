@@ -9,6 +9,7 @@ export interface Poll {
     question: string;
     options: Option[];
     voteCount: number;
+    creator: string;
     creationDate: number; // unix timestamp
     closeDate: number; // unix timestamp
 };

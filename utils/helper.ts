@@ -2,29 +2,35 @@ import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Option, Poll } from "./types";
 import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, REGISTER_USER_VOTE, USER_POLL_DETAILS, VOTE_ENDPOINT } from "./constants";
+import { revalidateTagByServerAction } from '@/actions/revalidate';
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
-        const response = await fetch(CREATE_POLL_ENDPOINT, {
+        await fetch(CREATE_POLL_ENDPOINT, {
             method: 'POST',
             body: JSON.stringify(poll),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-        const data = await response.json();
-        console.log('data', data);
+        // revalidate the / page to fetch latest polls
+        await revalidateTagByServerAction("all-polls");
         alert('Poll created');
         router.push('/');
+
     } catch (error) {
         console.log('error:', error);
     }
-
 };
 
 export const fetchAllPolls = async () => {
     try {
-        const response = await fetch(LIST_ALL_POLLS_ENDPOINT, { cache: 'no-store' });
+        const response = await fetch(LIST_ALL_POLLS_ENDPOINT, {
+            cache: 'no-store',
+            next: {
+                tags: ['all-polls']
+            }
+        });
         return response.json();
     } catch (error) {
         console.log('failed to fetch polls:', error);

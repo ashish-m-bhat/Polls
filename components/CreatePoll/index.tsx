@@ -20,7 +20,7 @@ function CreatePoll() {
     const [questionInput, setQuestionInput] = useState("");
     const [optionInput, setOptionInput] = useState("");
     const router = useRouter();
-    const { isLoggedIn } = useAppSelector((state) => state.auth);
+    const { isLoggedIn, email } = useAppSelector((state) => state.auth);
 
     useEffect(() => {
         !isLoggedIn && router.push('/');
@@ -51,6 +51,7 @@ function CreatePoll() {
             question: questionInput,
             voteCount: 0,
             options: options,
+            creator: email,
             creationDate: Date.now(),
             closeDate: Date.now() + 86400 * 1000 * DAYS_TO_CLOSE,
         };

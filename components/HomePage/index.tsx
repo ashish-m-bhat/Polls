@@ -1,7 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Poll } from '@/utils/types';
 import { ListPolls } from '..';
 import Button from '../UI/Button';
