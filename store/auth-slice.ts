@@ -6,8 +6,9 @@ const initialState: User = {
     accessToken: '',
     email: '',
     name: '',
-    picture: ''
-}
+    picture: '',
+    polls: {},
+};
 
 export const auth = createSlice({
     name: 'auth',
@@ -20,15 +21,15 @@ export const auth = createSlice({
             return initialState;
         },
         setUserInfo: (state, action: PayloadAction<User>) => {
-            const { accessToken, email, name, picture } = action.payload;
+            const { accessToken, email, name, picture, polls } = action.payload;
             return {
                 ...state,
                 accessToken,
                 email,
                 name,
                 picture,
-            }
-
+                polls,
+            };
         }
     }
 

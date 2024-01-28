@@ -10,13 +10,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const defaultObject = {
         email,
-        poll_ids_list: [],
-        option_ids_list: [],
+        polls: {}
     };
 
     const userDBEntry = await userVotes.findOne({ email: email }) || defaultObject;
-    userDBEntry.poll_ids_list.push(poll.id);
-    userDBEntry.option_ids_list.push(selectedOption.id);
+    userDBEntry.polls[poll.id] = selectedOption.id;
 
     await userVotes.updateOne(
         { email: email },

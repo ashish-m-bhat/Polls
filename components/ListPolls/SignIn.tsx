@@ -2,7 +2,7 @@
 import React from 'react'
 import Button from '../UI/Button';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { fetchUserInfo } from '@/utils/helper';
+import { fetchUserInfo, fetchUserPollDetails } from '@/utils/helper';
 import styles from '../../styles/ListPolls.module.css';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logIn, logOut, setUserInfo } from '@/store/auth-slice';
@@ -18,18 +18,21 @@ function SignIn() {
     onSuccess: async ({ access_token }) => {
       dispatch(logIn());
       try {
-        const { data } = await fetchUserInfo(access_token);
+        const { data: userData } = await fetchUserInfo(access_token);
+        const { polls = {} } = await fetchUserPollDetails(userData.email);
         const userInfo: User = {
-          email: data.email,
-          name: data.name,
+          email: userData.email,
+          name: userData.name,
           accessToken: access_token,
-          picture: data.picture,
-          isLoggedIn
+          picture: userData.picture,
+          isLoggedIn,
+          polls
         };
-        dispatch(setUserInfo(userInfo))
+        dispatch(setUserInfo(userInfo));
       } catch (error) {
         dispatch(logOut());
-        alert('Something went wrong, please try again.')
+        alert('Something went wrong, please try again.');
+        console.log(error);
       }
 
     },

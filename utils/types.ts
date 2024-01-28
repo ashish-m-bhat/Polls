@@ -1,6 +1,10 @@
 import React, { ReactNode } from "react";
+
+type PollId =  string;
+type OptionId = string;
+
 export interface Poll {
-    id: string;
+    id: PollId;
     isActive: boolean;
     question: string;
     options: Option[];
@@ -10,8 +14,8 @@ export interface Poll {
 };
 
 export interface Option {
-    pollId: string;
-    id: string;
+    pollId: PollId;
+    id: OptionId;
     value: string;
     voteCount: number;
 };
@@ -22,6 +26,7 @@ export interface User {
     email: string;
     name: string;
     picture: string;
+    polls: any;
 };
 
 export interface Button {

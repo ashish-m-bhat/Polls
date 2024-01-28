@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Option, Poll } from "./types";
-import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, REGISTER_USER_VOTE, VOTE_ENDPOINT } from "./constants";
+import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, REGISTER_USER_VOTE, USER_POLL_DETAILS, VOTE_ENDPOINT } from "./constants";
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
@@ -31,7 +31,7 @@ export const fetchAllPolls = async () => {
     }
 };
 
-export const registerUserVote = async (poll: Poll, selectedOption: Option, userEmail: string ) => {
+export const registerUserVote = async (poll: Poll, selectedOption: Option, userEmail: string) => {
     try {
         await fetch(REGISTER_USER_VOTE, {
             method: 'POST',
@@ -47,7 +47,6 @@ export const registerUserVote = async (poll: Poll, selectedOption: Option, userE
 }
 
 export const votePoll = async (poll: Poll, selectedOption: Option, userEmail: string) => {
-
     // modify poll with added vote count for poll & option
     const modifiedPoll = {
         ...poll,
@@ -85,4 +84,13 @@ export const fetchUserInfo = async (accessToken: string) => {
             Authorization: `Bearer ${accessToken}`
         }
     });
+};
+
+export const fetchUserPollDetails = async (email: string) => {
+    try {
+        const response = await fetch(`${USER_POLL_DETAILS}?email=${email}`);
+        return await response.json();
+    } catch (error) {
+        console.log('failed to get user poll details');
+    }
 };

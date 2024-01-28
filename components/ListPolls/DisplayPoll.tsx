@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../styles/ListPolls.module.css';
 import { Option, Poll } from '@/utils/types';
 import Card from '../UI/Card';
@@ -30,9 +30,15 @@ function DisplayPoll({ poll, index }: { poll: Poll, index: number }) {
 }
 
 function DisplayOptions({ poll }: { poll: Poll }) {
+    const { isLoggedIn, email, polls } = useAppSelector((state) => state.auth);
     const [votingDone, setVotingDone] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState('');
-    const { isLoggedIn, email, accessToken } = useAppSelector((state) => state.auth);
+
+    // Once we get the details of the polls this user has participated on, check if this poll is already voted
+    useEffect(() => {
+        setVotingDone(poll.id in polls);
+        setSelectedOptionId(polls[poll.id])
+    }, [polls]);
 
     const getVotePercentage = (option: Option) => {
         const newOptionVoteCount = option.id === selectedOptionId ? option.voteCount + 1 : option.voteCount;
@@ -40,9 +46,14 @@ function DisplayOptions({ poll }: { poll: Poll }) {
     };
 
     // votePoll() will send a POST request which will modify the poll object to increase vote count of the poll & the selected option
+    // Not to be called if user isn't logged in or if the logged in user is already done voting this poll
     const onPollVote = (option: Option) => {
         if (!isLoggedIn) {
-            alert('You have to login to create a poll')
+            alert('You have to login to create a poll');
+            return;
+        }
+        if (poll.id in polls) {
+            alert('You\'vealready voted');
             return;
         }
         if (votingDone) return;
