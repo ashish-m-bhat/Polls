@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { poll, selectedOption, userEmail: email } = req.body;
+    const { pollId, selectedOptionId, userEmail: email } = req.body;
 
     const client = await MongoClient.connect(process.env.MONGO_URL as string);
     const db = client.db();
@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     const userDBEntry = await userVotes.findOne({ email: email }) || defaultObject;
-    userDBEntry.polls[poll.id] = selectedOption.id;
+    userDBEntry.polls[pollId] = selectedOptionId;
 
     await userVotes.updateOne(
         { email: email },

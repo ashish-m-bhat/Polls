@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../styles/ListPolls.module.css';
 import { Option, Poll } from '@/utils/types';
 import Card from '../UI/Card';
-import { votePoll } from '@/utils/helper';
+import { registerUserVote, votePoll } from '@/utils/helper';
 import { useAppSelector } from '@/store';
 
 const optionsMarkings = {
@@ -47,7 +47,7 @@ function DisplayOptions({ poll }: { poll: Poll }) {
 
     // votePoll() will send a POST request which will modify the poll object to increase vote count of the poll & the selected option
     // Not to be called if user isn't logged in or if the logged in user is already done voting this poll
-    const onPollVote = (option: Option) => {
+    const onPollVote = async (option: Option) => {
         if (!isLoggedIn) {
             alert('You have to login to create a poll');
             return;
@@ -57,9 +57,10 @@ function DisplayOptions({ poll }: { poll: Poll }) {
             return;
         }
         if (votingDone) return;
-        setSelectedOptionId(option.id);
+        // setSelectedOptionId(option.id);
         setVotingDone(true);
-        votePoll(poll, option, email);
+        await Promise.all([votePoll(poll, option), registerUserVote(poll.id, option.id, email)])
+
     };
 
     return (

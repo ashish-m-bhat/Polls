@@ -37,22 +37,21 @@ export const fetchAllPolls = async () => {
     }
 };
 
-export const registerUserVote = async (poll: Poll, selectedOption: Option, userEmail: string) => {
+export const registerUserVote = async (pollId: string, selectedOptionId: string, userEmail: string) => {
     try {
-        await fetch(REGISTER_USER_VOTE, {
+        fetch(REGISTER_USER_VOTE, {
             method: 'POST',
-            body: JSON.stringify({ poll, selectedOption, userEmail }),
+            body: JSON.stringify({ pollId, selectedOptionId, userEmail }),
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        }).then(() => revalidateTagByServerAction('user-poll-details'));
     } catch (error) {
         console.log('Failed to register user vote');
     }
+};
 
-}
-
-export const votePoll = async (poll: Poll, selectedOption: Option, userEmail: string) => {
+export const votePoll = async (poll: Poll, selectedOption: Option) => {
     // modify poll with added vote count for poll & option
     const modifiedPoll = {
         ...poll,
@@ -76,11 +75,10 @@ export const votePoll = async (poll: Poll, selectedOption: Option, userEmail: st
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        });
     } catch (error) {
         console.log('voting failed:', error);
     }
-    await registerUserVote(poll, selectedOption, userEmail);
 };
 
 export const fetchUserInfo = async (accessToken: string) => {
@@ -94,7 +92,11 @@ export const fetchUserInfo = async (accessToken: string) => {
 
 export const fetchUserPollDetails = async (email: string) => {
     try {
-        const response = await fetch(`${USER_POLL_DETAILS}?email=${email}`);
+        const response = await fetch(`${USER_POLL_DETAILS}?email=${email}`, {
+            next: {
+                tags: ['user-poll-details']
+            }
+        });
         return await response.json();
     } catch (error) {
         console.log('failed to get user poll details');
