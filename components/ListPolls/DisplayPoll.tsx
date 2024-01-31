@@ -4,6 +4,8 @@ import { Option, Poll } from '@/utils/types';
 import Card from '../UI/Card';
 import { registerUserVote, votePoll } from '@/utils/helper';
 import { useAppSelector } from '@/store';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const optionsMarkings = {
     1: 'A',
@@ -16,13 +18,14 @@ const getOptionMarking = (index: number) => {
     return optionsMarkings[index as keyof typeof optionsMarkings];
 };
 
-function DisplayPoll({ poll, index }: { poll: Poll, index: number }) {
+function DisplayPoll({ poll, index }: { poll: Poll, index?: number | undefined }) {
+    const router = useRouter();
     return (
         <Card>
             <div className={styles.poll}>
-                {/* Question */}
-                <p>{index + 1}. {poll.question}</p>
-
+                <p>
+                    {index !== undefined && <span>{index + 1}.</span>} <Link className={styles.question} href={`/poll/${poll.id}`}> {poll.question} </Link>
+                </p>
                 <DisplayOptions poll={poll} />
             </div>
         </Card>
@@ -57,7 +60,7 @@ function DisplayOptions({ poll }: { poll: Poll }) {
             return;
         }
         if (votingDone) return;
-        // setSelectedOptionId(option.id);
+        setSelectedOptionId(option.id);
         setVotingDone(true);
         await Promise.all([votePoll(poll, option), registerUserVote(poll.id, option.id, email)])
 
@@ -77,7 +80,8 @@ function DisplayOptions({ poll }: { poll: Poll }) {
                                 to right,
                                 #6dae06 ${votePercent}%,
                                 transparent ${votePercent}%
-                              )`} : {}}
+                              )`, width: '95%'
+                            } : {}}
                             onClick={() => onPollVote(option)}
                         >
                             {getOptionMarking(index + 1)}. {option.value}

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Option, Poll } from "./types";
-import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, REGISTER_USER_VOTE, USER_POLL_DETAILS, VOTE_ENDPOINT } from "./constants";
+import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, LIST_POLL, REGISTER_USER_VOTE, USER_POLL_DETAILS, VOTE_ENDPOINT } from "./constants";
 import { revalidateTagByServerAction } from '@/actions/revalidate';
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
@@ -101,4 +101,10 @@ export const fetchUserPollDetails = async (email: string) => {
     } catch (error) {
         console.log('failed to get user poll details');
     }
+};
+
+export const fetchPoll = async (pollId: string) => {
+    const response = await fetch(`${LIST_POLL}?pollId=${pollId}`);
+    const pollData = await response.json();
+    return pollData;
 };
