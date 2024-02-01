@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Option, Poll } from "./types";
-import { CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, LIST_POLL, REGISTER_USER_VOTE, USER_POLL_DETAILS, VOTE_ENDPOINT } from "./constants";
+import { Comment, Option, Poll, PollId } from "./types";
+import { ADD_COMMENT_ENDPOINT, COMMENTS_ENDPOINT, CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, POLL_DETAILS_ENDPOINT, REGISTER_USER_VOTE_ENDPOINT, USER_POLL_DETAILS_ENDPOINT, VOTE_ENDPOINT } from "./constants";
 import { revalidateTagByServerAction } from '@/actions/revalidate';
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
@@ -39,7 +39,7 @@ export const fetchAllPolls = async () => {
 
 export const registerUserVote = async (pollId: string, selectedOptionId: string, userEmail: string) => {
     try {
-        fetch(REGISTER_USER_VOTE, {
+        fetch(REGISTER_USER_VOTE_ENDPOINT, {
             method: 'POST',
             body: JSON.stringify({ pollId, selectedOptionId, userEmail }),
             headers: {
@@ -92,7 +92,7 @@ export const fetchUserInfo = async (accessToken: string) => {
 
 export const fetchUserPollDetails = async (email: string) => {
     try {
-        const response = await fetch(`${USER_POLL_DETAILS}?email=${email}`, {
+        const response = await fetch(`${USER_POLL_DETAILS_ENDPOINT}?email=${email}`, {
             next: {
                 tags: ['user-poll-details']
             }
@@ -103,8 +103,37 @@ export const fetchUserPollDetails = async (email: string) => {
     }
 };
 
-export const fetchPoll = async (pollId: string) => {
-    const response = await fetch(`${LIST_POLL}?pollId=${pollId}`);
-    const pollData = await response.json();
-    return pollData;
+export const fetchPollDetails = async (pollId: PollId) => {
+    try {
+        const response = await fetch(`${POLL_DETAILS_ENDPOINT}?pollId=${pollId}`);
+        const pollData = await response.json();
+        return pollData;
+    } catch (error) {
+        console.log('Error in fetching poll details');
+    }
+};
+
+export const fetchComments = async (pollId: PollId) => {
+    try {
+        const response = await fetch(`${COMMENTS_ENDPOINT}?pollId=${pollId}`, { cache: 'no-cache' });
+        const comments = await response.json();
+        return comments;
+    } catch (error) {
+        console.log('Error in comments');
+    }
+};
+
+export const addComment = async (comment: Comment) => {
+    try {
+        await fetch(ADD_COMMENT_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify(comment),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        // await revalidateTagByServerAction("all-polls");
+    } catch (error) {
+        console.log('Error while adding comment:', error);
+    }
 };

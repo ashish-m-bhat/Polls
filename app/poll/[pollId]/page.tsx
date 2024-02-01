@@ -1,16 +1,18 @@
 import React from 'react';
-import { DisplaySinglePoll } from '@/components';
-import { fetchPoll } from '@/utils/helper'
+import { CommentsSection, DisplaySinglePoll } from '@/components';
+import { fetchComments, fetchPollDetails } from '@/utils/helper'
+import { PollId } from '@/utils/types';
 
-async function page({ params: { pollId } }: { params: { pollId: string } }) {
-    const pollData = await fetchPoll(pollId);
+async function PollDetailsPage({ params: { pollId } }: { params: { pollId: PollId } }) {
+    const pollData = await fetchPollDetails(pollId);
+    const comments = await fetchComments(pollId);
 
-    // get poll details
     return (
         <div>
             <DisplaySinglePoll pollData={pollData} />
+            <CommentsSection pollId={pollId} comments={comments} />
         </div>
     )
 }
 
-export default page
+export default PollDetailsPage;

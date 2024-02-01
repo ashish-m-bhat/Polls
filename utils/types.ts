@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
 
-type PollId =  string;
-type OptionId = string;
+export type PollId =  string;
+export type OptionId = string;
+export type CommentId = string;
 
 export interface Poll {
     id: PollId;
@@ -28,6 +29,15 @@ export interface User {
     name: string;
     picture: string;
     polls: any;
+};
+
+export interface Comment {
+    id: CommentId;
+    pollId: PollId;
+    email: string;
+    value: string;
+    children: Comment[];
+    creationDate: number; // unix timestamp
 };
 
 export interface Button {
