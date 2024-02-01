@@ -5,12 +5,12 @@ import { PollId } from '@/utils/types';
 
 async function PollDetailsPage({ params: { pollId } }: { params: { pollId: PollId } }) {
     const pollData = await fetchPollDetails(pollId);
-    const comments = await fetchComments(pollId);
+    const commentsFromServer = await fetchComments(pollId);
 
     return (
         <div>
             <DisplaySinglePoll pollData={pollData} />
-            <CommentsSection pollId={pollId} comments={comments} />
+            <CommentsSection pollId={pollId} commentsFromServer={commentsFromServer} />
         </div>
     )
 }

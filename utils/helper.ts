@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Comment, Option, Poll, PollId } from "./types";
-import { ADD_COMMENT_ENDPOINT, COMMENTS_ENDPOINT, CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, POLL_DETAILS_ENDPOINT, REGISTER_USER_VOTE_ENDPOINT, USER_POLL_DETAILS_ENDPOINT, VOTE_ENDPOINT } from "./constants";
+import { Comment, Option, Poll, PollId, Reply } from "./types";
+import { ADD_COMMENT_ENDPOINT, ADD_COMMENT_REPLY_ENDPOINT, COMMENTS_ENDPOINT, CREATE_POLL_ENDPOINT, LIST_ALL_POLLS_ENDPOINT, POLL_DETAILS_ENDPOINT, REGISTER_USER_VOTE_ENDPOINT, USER_POLL_DETAILS_ENDPOINT, VOTE_ENDPOINT } from "./constants";
 import { revalidateTagByServerAction } from '@/actions/revalidate';
+
+export const checkIfObjectIsEmpty = (object: Object) => {
+    return !!Object.keys(object).length;
+}
 
 export const createPoll = async (poll: Poll, router: AppRouterInstance) => {
     try {
@@ -123,7 +127,7 @@ export const fetchComments = async (pollId: PollId) => {
     }
 };
 
-export const addComment = async (comment: Comment) => {
+export const addCommentToDB = async (comment: Comment) => {
     try {
         await fetch(ADD_COMMENT_ENDPOINT, {
             method: 'POST',
@@ -135,5 +139,20 @@ export const addComment = async (comment: Comment) => {
         // await revalidateTagByServerAction("all-polls");
     } catch (error) {
         console.log('Error while adding comment:', error);
+    }
+};
+
+export const addCommentReplyToDB = async (pollId: PollId, reply: Reply) => {
+    try {
+        await fetch(ADD_COMMENT_REPLY_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify({ pollId, reply }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        // await revalidateTagByServerAction("all-polls");
+    } catch (error) {
+        console.log('Error while adding reply:', error);
     }
 };

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-export type PollId =  string;
+export type PollId = string;
 export type OptionId = string;
 export type CommentId = string;
 
@@ -36,8 +36,13 @@ export interface Comment {
     pollId: PollId;
     email: string;
     value: string;
-    children: Comment[];
     creationDate: number; // unix timestamp
+    rootComment: boolean;
+    children: null | { [key: CommentId]: Reply };
+};
+
+export interface Reply extends Comment {
+    parentCommentId: CommentId;
 };
 
 export interface Button {
@@ -53,4 +58,4 @@ export interface Button {
 export interface Card {
     children: ReactNode;
     className?: string;
- };
+};

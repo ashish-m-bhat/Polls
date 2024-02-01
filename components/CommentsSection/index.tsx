@@ -1,17 +1,27 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from '../../styles/Comments.module.css';
-import { Comment, PollId } from '@/utils/types';
+import { Comment, CommentId, PollId } from '@/utils/types';
 import DisplayComments from './DisplayComments';
-import { addComment } from '@/utils/helper';
+import { addCommentToDB } from '@/utils/helper';
+import { useAppDispatch } from '@/store';
+import { addComment, setComments } from '@/store/comments-slice';
+import { storeWrapper } from '../StoreWrapper';
 
-function CommentsSection({ pollId, comments }: { pollId: PollId, comments: Comment[] }) {
-    const [currentComments, setCurrentComments] = useState(comments);
+
+function CommentsSection({ pollId, commentsFromServer }: { pollId: PollId, commentsFromServer: { [key: CommentId]: Comment } }) {
+    const dispatch = useAppDispatch();
     const commentInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        dispatch(setComments(commentsFromServer));
+    }, []);
 
     const addCommentHandler = async (event: React.FormEvent) => {
         event.preventDefault();
-        const isLoggedIn = 0;
+        if (!commentInputRef.current?.value) return;
+
+        const isLoggedIn = 1;
         if (!isLoggedIn) {
             alert('You have to login to comment on a poll');
             return;
@@ -21,17 +31,18 @@ function CommentsSection({ pollId, comments }: { pollId: PollId, comments: Comme
             pollId,
             value: commentInputRef!.current!.value,
             creationDate: Date.now(),
-            children: [],
+            children: {},
+            rootComment: true,
             email: ''
         };
         commentInputRef!.current!.value = '';
-        await addComment(newComment);
-        setCurrentComments(val => [newComment, ...val]);
+        dispatch(addComment(newComment));
+        await addCommentToDB(newComment);
     };
 
     return (
         <div className={styles['CommentsSection']}>
-            <DisplayComments comments={currentComments} />
+            <DisplayComments pollId={pollId} />
             <form className={styles['comment__input__section']} onSubmit={addCommentHandler}>
                 <input ref={commentInputRef} className={styles['input']} />
                 <button>Send</button>
@@ -40,4 +51,4 @@ function CommentsSection({ pollId, comments }: { pollId: PollId, comments: Comme
     );
 }
 
-export default CommentsSection;
+export default storeWrapper(CommentsSection);

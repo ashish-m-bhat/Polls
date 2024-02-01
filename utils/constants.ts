@@ -6,3 +6,4 @@ export const REGISTER_USER_VOTE_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/a
 export const USER_POLL_DETAILS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/user-poll-details`;
 export const COMMENTS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/comments`;
 export const ADD_COMMENT_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/add-comment`;
+export const ADD_COMMENT_REPLY_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/add-comment-reply`;

@@ -22,15 +22,28 @@
     margin-top: 5rem;
 }
 
+
+.question {
+    text-decoration: none;
+}
+
+.question:visited {
+    color: white;
+}
+
+.question:hover {
+    color: gray;
+}
+
 .option {
-    background-color: rgb(65, 63, 63);
+    background-color: var(--dark--gray);
     border-radius: 8px;
     min-width: 300px;
     cursor: pointer;
 }
 
 .option:hover {
-    background-color: rgb(116, 110, 110);
+    background-color: var(--light-gray);
 }
 
 .inner-option {
@@ -51,5 +64,13 @@
 }
 
 .option-selected {
-    background-color: rgb(116, 110, 110);
+    background-color: var(--light-gray);
+}
+
+.display-single-poll {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
