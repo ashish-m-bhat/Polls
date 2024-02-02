@@ -34,11 +34,15 @@ export interface User {
 export interface Comment {
     id: CommentId;
     pollId: PollId;
-    email: string;
     value: string;
     creationDate: number; // unix timestamp
     rootComment: boolean;
     children: null | { [key: CommentId]: Reply };
+    commentor: {
+        email: string,
+        name: string,
+        picture: string
+    }
 };
 
 export interface Reply extends Comment {

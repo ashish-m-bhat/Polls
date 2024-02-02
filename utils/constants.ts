@@ -7,3 +7,7 @@ export const USER_POLL_DETAILS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/ap
 export const COMMENTS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/comments`;
 export const ADD_COMMENT_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/add-comment`;
 export const ADD_COMMENT_REPLY_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URL}/api/add-comment-reply`;
+
+
+
+export const ANONYMOUS = 'Anonymous';

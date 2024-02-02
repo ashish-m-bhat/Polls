@@ -26,22 +26,47 @@
     overflow-y: scroll;
 }
 
-.comment, .reply {
-    height: 40px;
+.comment,
+.reply {
+    height: 60px;
     min-width: 26px;
     background-color: var(--dark--gray);
-    display: flex;
-    align-items: center;
     padding: 0 8px;
     border-radius: 8px;
     padding-right: 4rem;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .nameComment {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .name {
+        font-size: 12px;
+        opacity: 0.7;
+    }
+
     width: max-content;
+}
+
+.profile__img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
 }
 
 .comment__cta {
     opacity: 0.7;
     display: flex;
-    .view-replies, .reply__cta {
+
+    .view-replies,
+    .reply__cta {
         font-size: 10px;
         padding: 4px;
         cursor: pointer;

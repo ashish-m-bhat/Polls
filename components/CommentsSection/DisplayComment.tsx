@@ -4,25 +4,38 @@ import styles from '../../styles/Comments.module.css';
 import ReplyToComment from './ReplyToComment';
 import ViewReplies from './ViewReplies';
 import { checkIfObjectIsEmpty } from '@/utils/helper';
+import { ANONYMOUS } from '@/utils/constants';
 
 function DisplayComment({ comment, pollId }: { comment: Comment, pollId: PollId }) {
-    console.log(comment.value, comment);
 
     const [repliesVisible, setRepliesVisible] = useState(false);
     const [replyInputVisible, setReplyInputVisible] = useState(false);
+
+    const {
+        name: commentorName = ANONYMOUS,
+        picture: commentorPfp
+    } = comment.commentor
 
     return (
         <div>
             {/* Comment */}
             <div className={styles.comment}>
-                <p>{comment.value}</p>
+                <img
+                    src={commentorPfp || "/default_pfp.webp"}
+                    className={styles.profile__img}
+                />
+                <div className={styles.nameComment} >
+                    <span className={styles.name}>{commentorName}</span>
+                    <span>{comment.value}</span>
+                </div>
             </div>
 
             {/* View Replies & Reply CTAs */}
             <div className={styles.comment__cta}>
                 {comment.children && checkIfObjectIsEmpty(comment.children) &&
                     <span className={styles['view-replies']} onClick={() => setRepliesVisible(val => !val)}>
-                        {repliesVisible ? 'Hide' : 'View'} replies
+                        {repliesVisible ? 'Hide replies' :
+                            `View ${Object.keys(comment.children).length} replies`}
                     </span>
                 }
 

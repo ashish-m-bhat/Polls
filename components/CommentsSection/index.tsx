@@ -4,17 +4,20 @@ import styles from '../../styles/Comments.module.css';
 import { Comment, CommentId, PollId } from '@/utils/types';
 import DisplayComments from './DisplayComments';
 import { addCommentToDB } from '@/utils/helper';
-import { useAppDispatch } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { addComment, setComments } from '@/store/comments-slice';
 import { storeWrapper } from '../StoreWrapper';
+import { ANONYMOUS } from '@/utils/constants';
 
 
 function CommentsSection({ pollId, commentsFromServer }: { pollId: PollId, commentsFromServer: { [key: CommentId]: Comment } }) {
     const dispatch = useAppDispatch();
     const commentInputRef = useRef<HTMLInputElement>(null);
+    const userInfo = useAppSelector((state) => state.auth);
 
     useEffect(() => {
         dispatch(setComments(commentsFromServer));
+        commentInputRef.current?.focus();
     }, []);
 
     const addCommentHandler = async (event: React.FormEvent) => {
@@ -33,7 +36,11 @@ function CommentsSection({ pollId, commentsFromServer }: { pollId: PollId, comme
             creationDate: Date.now(),
             children: {},
             rootComment: true,
-            email: ''
+            commentor: {
+                email: userInfo.email || ANONYMOUS,
+                name: userInfo.name || ANONYMOUS,
+                picture: userInfo.picture || ''
+            },
         };
         commentInputRef!.current!.value = '';
         dispatch(addComment(newComment));
