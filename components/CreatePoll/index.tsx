@@ -1,7 +1,7 @@
 'use client';
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPoll } from "@/utils/helper";
+import { createPoll } from "@/utils/api-middlewares";
 import { Option, Poll } from "@/utils/types";
 import { useAppSelector } from "@/store";
 import Button from "../UI/Button";

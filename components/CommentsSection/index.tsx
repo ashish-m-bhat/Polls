@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from '../../styles/Comments.module.css';
 import { Comment, CommentId, PollId } from '@/utils/types';
 import DisplayComments from './DisplayComments';
-import { addCommentToDB } from '@/utils/helper';
+import { addCommentToDB } from '@/utils/api-middlewares';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { addComment, setComments } from '@/store/comments-slice';
 import { storeWrapper } from '../StoreWrapper';
@@ -35,12 +35,12 @@ function CommentsSection({ pollId, commentsFromServer }: { pollId: PollId, comme
             value: commentInputRef!.current!.value,
             creationDate: Date.now(),
             children: {},
-            rootComment: true,
             commentor: {
                 email: userInfo.email || ANONYMOUS,
                 name: userInfo.name || ANONYMOUS,
                 picture: userInfo.picture || ''
             },
+            parentCommentId: ''
         };
         commentInputRef!.current!.value = '';
         dispatch(addComment(newComment));

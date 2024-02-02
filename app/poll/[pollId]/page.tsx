@@ -1,6 +1,6 @@
 import React from 'react';
 import { CommentsSection, DisplaySinglePoll } from '@/components';
-import { fetchComments, fetchPollDetails } from '@/utils/helper'
+import { fetchComments, fetchPollDetails } from '@/utils/api-middlewares'
 import { PollId } from '@/utils/types';
 
 async function PollDetailsPage({ params: { pollId } }: { params: { pollId: PollId } }) {

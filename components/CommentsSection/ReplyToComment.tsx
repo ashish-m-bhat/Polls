@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction, useRef } from 'react';
 import styles from '../../styles/Comments.module.css';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { Comment, PollId, Reply } from '@/utils/types';
+import { Comment, CommentId, PollId } from '@/utils/types';
 import { addReplyToComment } from '@/store/comments-slice';
-import { addCommentReplyToDB } from '@/utils/helper';
+import { addCommentReplyToDB } from '@/utils/api-middlewares';
 import { ANONYMOUS } from '@/utils/constants';
 
 type Props = {
@@ -22,20 +22,20 @@ function ReplyToComment({ pollId, comment, setReplyInputVisible }: Props) {
         event.preventDefault();
         if (!replyInputRef.current?.value) return;
 
-        const newReply: Reply = {
+        const newReply: Comment = {
             parentCommentId: comment.id,
             id: Date.now().toString(),
             pollId,
             value: replyInputRef!.current!.value,
             creationDate: Date.now(),
-            rootComment: false,
             commentor: {
-                email: userInfo.email|| ANONYMOUS,
+                email: userInfo.email || ANONYMOUS,
                 name: userInfo.name || ANONYMOUS,
                 picture: userInfo.picture || ''
             },
-            children: null // always null for replies
+            children: {} // always null for replies
         };
+
         dispatch(addReplyToComment(newReply)); // redux
         setReplyInputVisible(false);
         replyInputRef!.current!.value = '';

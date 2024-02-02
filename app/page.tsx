@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { fetchAllPolls } from "@/utils/helper";
+import { fetchAllPolls } from "@/utils/api-middlewares";
 import { HomePage } from "@/components";
 
 export default async function Home() {

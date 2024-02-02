@@ -36,16 +36,12 @@ export interface Comment {
     pollId: PollId;
     value: string;
     creationDate: number; // unix timestamp
-    rootComment: boolean;
-    children: null | { [key: CommentId]: Reply };
+    children: { [key: CommentId]: Comment };
     commentor: {
         email: string,
         name: string,
         picture: string
     }
-};
-
-export interface Reply extends Comment {
     parentCommentId: CommentId;
 };
 

@@ -3,7 +3,7 @@ import { Comment, PollId } from '@/utils/types';
 import styles from '../../styles/Comments.module.css';
 import ReplyToComment from './ReplyToComment';
 import ViewReplies from './ViewReplies';
-import { checkIfObjectIsEmpty } from '@/utils/helper';
+import { checkIfObjectIsEmpty, getRepliesCount } from '@/utils/helper';
 import { ANONYMOUS } from '@/utils/constants';
 
 function DisplayComment({ comment, pollId }: { comment: Comment, pollId: PollId }) {
@@ -32,10 +32,11 @@ function DisplayComment({ comment, pollId }: { comment: Comment, pollId: PollId 
 
             {/* View Replies & Reply CTAs */}
             <div className={styles.comment__cta}>
-                {comment.children && checkIfObjectIsEmpty(comment.children) &&
+                {!checkIfObjectIsEmpty(comment.children) &&
                     <span className={styles['view-replies']} onClick={() => setRepliesVisible(val => !val)}>
                         {repliesVisible ? 'Hide replies' :
-                            `View ${Object.keys(comment.children).length} replies`}
+                            `View ${getRepliesCount(comment)} replies`
+                        }
                     </span>
                 }
 
@@ -45,7 +46,7 @@ function DisplayComment({ comment, pollId }: { comment: Comment, pollId: PollId 
                 }
             </div>
 
-            {repliesVisible && comment.children && <ViewReplies replies={comment.children} />}
+            {repliesVisible && <ViewReplies replies={comment.children} pollId={pollId} />}
             {/* Reply Form */}
             {replyInputVisible && <ReplyToComment pollId={pollId} comment={comment} setReplyInputVisible={setReplyInputVisible} />}
         </div>

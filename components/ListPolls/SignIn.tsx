@@ -2,7 +2,7 @@
 import React from 'react'
 import Button from '../UI/Button';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { fetchUserInfo, fetchUserPollDetails } from '@/utils/helper';
+import { fetchUserInfo, fetchUserPollDetails } from '@/utils/api-middlewares';
 import styles from '../../styles/ListPolls.module.css';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { logIn, logOut, setUserInfo } from '@/store/auth-slice';

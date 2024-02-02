@@ -18,8 +18,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const commentObjectForPoll = await commentsDB.findOne({ pollId: pollId });
 
-    const parentComment = (commentObjectForPoll?.comments as { [key: CommentId]: Comment })[parentCommentId];
-    parentComment.children[replyToBeAdded.id] = replyToBeAdded;
+    function findParentCommentRecursively(comments: { [key: string]: Comment }) {
+        for (let key of Object.keys(comments)) {
+            const currentComment = comments[key];
+            if (currentComment.id === parentCommentId) {
+                currentComment.children[replyToBeAdded.id] = replyToBeAdded;
+                break;
+            }
+            if (Object.keys(currentComment.children).length) {
+                findParentCommentRecursively(currentComment.children);
+            }
+        }
+    }
+    findParentCommentRecursively(commentObjectForPoll?.comments);
 
     await commentsDB.updateOne(
         { pollId: pollId },

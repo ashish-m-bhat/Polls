@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../styles/ListPolls.module.css';
 import { Option, Poll } from '@/utils/types';
 import Card from '../UI/Card';
-import { registerUserVote, votePoll } from '@/utils/helper';
+import { registerUserVote, votePoll } from '@/utils/api-middlewares';
 import { useAppSelector } from '@/store';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
